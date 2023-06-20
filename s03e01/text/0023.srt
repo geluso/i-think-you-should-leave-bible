@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:01,160
+ I'm just looking at it.
+
+2
+00:00:01,160 --> 00:00:03,080
+ I know there's a new phone coming out soon,
+
+3
+00:00:03,080 --> 00:00:04,920
+ but I'm not worried about it at all.
+

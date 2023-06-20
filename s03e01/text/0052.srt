@@ -1,0 +1,16 @@
+1
+00:00:00,000 --> 00:00:01,000
+ Stop.
+
+2
+00:00:01,000 --> 00:00:06,000
+ Just make sure that everyone's short and long-term goals are laid out clearly and reasonably.
+
+3
+00:00:06,000 --> 00:00:09,000
+ Even then, things won't always come out the way you want them.
+
+4
+00:00:09,000 --> 00:00:10,000
+ Sometimes...
+

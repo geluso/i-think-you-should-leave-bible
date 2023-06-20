@@ -1,0 +1,4 @@
+1
+00:00:00,000 --> 00:00:05,360
+ social event, I feel like I have to remind you all to be responsible.
+
