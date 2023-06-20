@@ -13,7 +13,49 @@ let FILTERED = {};
 let EPISODES_LOADED = 0;
 
 const main = () => {
-  EPISODES.forEach(loadEpisode)
+  EPISODES.forEach(loadEpisode);
+  loadSkits();
+}
+
+const loadSkits = () => {
+    fetch("skits.json")
+    .then(res => res.json())
+    .then(episodes => {
+        const episodesList = document.getElementById('episodes-list');
+
+        episodes.forEach(episode => {
+            // the name of the file is the episode number.
+            const episodeNumber = episode.name;
+            const skits = episode.contents;
+
+            const episodeNumberListItem = document.createElement('li');
+            episodeNumberListItem.textContent = episodeNumber;
+            episodesList.appendChild(episodeNumberListItem);
+
+            const skitsList = document.createElement('ul');
+            episodeNumberListItem.appendChild(skitsList);
+
+            skits.forEach(skit => {
+                // skit name is a name like "01-barley"
+                const skitName = skit.name;
+
+                const skitNameListItem = document.createElement('li');
+                skitNameListItem.textContent = skitName
+                skitsList.appendChild(skitNameListItem);
+
+                skitNameListItem.addEventListener('click', () => {
+                    clearAll();
+
+                    const clips = skit.contents;
+                    clips.forEach(clip => {
+                        const clipNumber = clip.name.split(".")[0];
+                        const clipId = episodeNumber + '-' + clipNumber;
+                        addClip(clipId)
+                    });
+                });
+            })
+        })
+    });
 }
 
 const loadEpisode = (episode) => {
@@ -88,11 +130,11 @@ const clearAll = () => {
 
 const populate = episodeClips => {
     for (episodeClip in episodeClips) {
-        addMovie(episodeClip)
+        addClip(episodeClip)
     }
 }
 
-const addMovie = episodeClip => {
+const addClip = episodeClip => {
     const [episodeNumber, clipNumber] = episodeClip.split('-');
 
     const resultsContainer = document.getElementById('results-container');
@@ -124,6 +166,11 @@ const addMovie = episodeClip => {
 const addLines = (linesContainer, episodeNumber, clipNumber) => {
     while (linesContainer.firstChild) {
         linesContainer.firstChild.remove();
+    }
+
+    // nasty hack to canonicalize differences between clip files with .mp4 or .srt extensions.
+    if (!clipNumber.includes(".srt")) {
+        clipNumber = clipNumber.split(".")[0] + ".srt";
     }
 
     const title = document.createElement('h3');
