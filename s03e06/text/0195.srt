@@ -1,0 +1,4 @@
+1
+00:00:00,000 --> 00:00:02,880
+ every Friday rain or shine, there's gonna be a new funny video.
+

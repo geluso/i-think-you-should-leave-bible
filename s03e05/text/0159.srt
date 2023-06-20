@@ -1,0 +1,20 @@
+1
+00:00:00,000 --> 00:00:02,000
+ Is this something?
+
+2
+00:00:02,000 --> 00:00:04,000
+ No, let me think a minute. I'll think a minute.
+
+3
+00:00:04,000 --> 00:00:06,000
+ I'll think a minute.
+
+4
+00:00:06,000 --> 00:00:08,000
+ It was my birthday yesterday. I turned 43.
+
+5
+00:00:08,000 --> 00:00:10,000
+ Good. Happy birthday.
+

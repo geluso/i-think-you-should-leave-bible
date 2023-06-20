@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:02,320
+ This little device will send an alert to my phone
+
+2
+00:00:02,320 --> 00:00:03,960
+ so I can monitor you in case there's
+
+3
+00:00:03,960 --> 00:00:06,200
+ a spike in your heart rate.
+

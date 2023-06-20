@@ -1,0 +1,8 @@
+1
+00:00:00,000 --> 00:00:01,840
+ There'd be a truck backing up into the building.
+
+2
+00:00:01,840 --> 00:00:03,240
+ I really thought that.
+

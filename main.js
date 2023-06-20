@@ -1,11 +1,19 @@
+const EPISODES = [
+    "s03e01",
+    "s03e02",
+    "s03e03",
+    "s03e04",
+    "s03e05",
+    "s03e06",
+]
+
 let ALL_DATA = {};
 let FILTERED = {};
 
 let EPISODES_LOADED = 0;
 
 const main = () => {
-    loadEpisode("s03e01");
-    loadEpisode("s03e02");
+  EPISODES.forEach(loadEpisode)
 }
 
 const loadEpisode = (episode) => {
@@ -20,7 +28,7 @@ const loadEpisode = (episode) => {
         form.addEventListener('submit', (ev) => handleSearch(ev, input.value))
 
         EPISODES_LOADED++;
-        if (EPISODES_LOADED === 2) {
+        if (EPISODES_LOADED === EPISODES.length) {
             populateSearch();
         }
     });

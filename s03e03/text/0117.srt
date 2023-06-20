@@ -1,0 +1,8 @@
+1
+00:00:00,000 --> 00:00:02,000
+ (car door opens)
+
+2
+00:00:02,000 --> 00:00:04,000
+ Hey, come on. What the hell's going on up there?
+

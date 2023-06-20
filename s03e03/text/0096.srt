@@ -1,0 +1,4 @@
+1
+00:00:00,000 --> 00:00:03,760
+ Stop! Please let me go! Please let me go first! I'm doing something!
+
