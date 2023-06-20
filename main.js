@@ -10,7 +10,9 @@ const EPISODES = [
 let ALL_DATA = {};
 let FILTERED = {};
 
-let EPISODES_LOADED = 0;
+let JSON_LOADED = 0;
+
+let REVERSE_SKIT_LOOKUP = {};
 
 const main = () => {
   EPISODES.forEach(loadEpisode);
@@ -43,10 +45,16 @@ const loadSkits = () => {
                 skitNameListItem.textContent = skitName
                 skitsList.appendChild(skitNameListItem);
 
+                const clips = skit.contents;
+                clips.forEach(clip => {
+                    const clipNumber = clip.name.split(".")[0];
+                    const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
+                    REVERSE_SKIT_LOOKUP[clipId] = skitName;
+                });
+
                 skitNameListItem.addEventListener('click', () => {
                     clearAll();
 
-                    const clips = skit.contents;
                     clips.forEach(clip => {
                         const clipNumber = clip.name.split(".")[0];
                         const clipId = episodeNumber + '-' + clipNumber;
@@ -55,6 +63,8 @@ const loadSkits = () => {
                 });
             })
         })
+
+        incrementJSONLoaded();
     });
 }
 
@@ -69,11 +79,16 @@ const loadEpisode = (episode) => {
         const input = document.getElementById('search-input');
         form.addEventListener('submit', (ev) => handleSearch(ev, input.value))
 
-        EPISODES_LOADED++;
-        if (EPISODES_LOADED === EPISODES.length) {
-            populateSearch();
-        }
+        incrementJSONLoaded();
     });
+}
+
+const incrementJSONLoaded = () => {
+    JSON_LOADED++;
+    // adding + 1 here to account for loading the skits.json too
+    if (JSON_LOADED === EPISODES.length + 1) {
+        populateSearch();
+    }
 }
 
 const populateSearch = () => {
@@ -174,7 +189,10 @@ const addLines = (linesContainer, episodeNumber, clipNumber) => {
     }
 
     const title = document.createElement('h3');
-    title.textContent = episodeNumber + '-' + clipNumber;
+
+    const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
+    const text = clipId + ' ' + REVERSE_SKIT_LOOKUP[clipId];
+    title.textContent = text
     linesContainer.appendChild(title);
 
     const lines = ALL_DATA[episodeNumber][clipNumber]
