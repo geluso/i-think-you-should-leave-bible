@@ -1,10 +1,10 @@
 const EPISODES = [
-    "output/s03e01",
-    "output/s03e02",
-    "output/s03e03",
-    "output/s03e04",
-    "output/s03e05",
-    "output/s03e06",
+    "data/s03e01",
+    "data/s03e02",
+    "data/s03e03",
+    "data/s03e04",
+    "data/s03e05",
+    "data/s03e06",
 ]
 
 let ALL_DATA = {};
@@ -196,6 +196,12 @@ const addLines = (linesContainer, episodeNumber, clipNumber) => {
     title.textContent = text
     linesContainer.appendChild(title);
 
+      
+    // another nasty hack
+    if (!episodeNumber.includes("data/")) {
+        episodeNumber = 'data/' + episodeNumber;
+    }
+
     const lines = ALL_DATA[episodeNumber][clipNumber]
     lines.forEach(line => {
         const div = document.createElement('div');
@@ -213,7 +219,7 @@ const playMovie = (linesContainer, videoContainer, episodeNumber, clipNumber) =>
 
     const video = document.createElement('video');
     clipNumber = clipNumber.split(".")[0]
-    filename = episodeNumber + '/scenes/' + clipNumber + '.mp4';
+    filename = 'media/' + episodeNumber + '/scenes/' + clipNumber + '.mp4';
     video.src = filename
     video.controls = true;
     video.autoplay = true;
