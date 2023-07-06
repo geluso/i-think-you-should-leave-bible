@@ -238,7 +238,7 @@ const playMovie = (linesContainer, videoContainer, episodeNumber, clipNumber) =>
     const next = document.createElement('button');
     next.textContent = 'next';
     next.addEventListener('click', () => {
-        let nextClipNumber = Math.min(Object.keys(ALL_DATA[episodeNumber]).length - 1, parseInt(clipNumber) + 1);
+        let nextClipNumber = Math.min(Object.keys(ALL_DATA['data/' + episodeNumber]).length - 1, parseInt(clipNumber) + 1);
         nextClipNumber = String(nextClipNumber).padStart(4, '0');
         console.log('clip number:', clipNumber, 'next:', nextClipNumber);
         addLines(linesContainer, episodeNumber, nextClipNumber + '.srt');
