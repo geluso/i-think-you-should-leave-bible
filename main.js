@@ -43,6 +43,7 @@ const loadSkits = () => {
 
                 const skitNameListItem = document.createElement('li');
                 skitNameListItem.textContent = skitName
+                skitNameListItem.classList.add('clickable');
                 skitsList.appendChild(skitNameListItem);
 
                 const clips = skit.contents;

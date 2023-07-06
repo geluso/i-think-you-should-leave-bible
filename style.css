@@ -8,3 +8,9 @@ video {
     width: 100%;
     max-width: 800px;
 }
+
+.clickable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
