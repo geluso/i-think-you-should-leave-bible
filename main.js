@@ -50,7 +50,8 @@ const loadSkits = () => {
                 clips.forEach(clip => {
                     const clipNumber = clip.name.split(".")[0];
                     const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
-                    REVERSE_SKIT_LOOKUP[clipId] = skitName;
+                    console.log('reverse skit lookup put', clipId);
+                    REVERSE_SKIT_LOOKUP['data/' + clipId] = skitName;
                 });
 
                 skitNameListItem.addEventListener('click', () => {
@@ -192,6 +193,7 @@ const addLines = (linesContainer, episodeNumber, clipNumber) => {
     const title = document.createElement('h3');
 
     const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
+    console.log('reverse skit lookup get', clipId);
     const text = clipId + ' ' + REVERSE_SKIT_LOOKUP[clipId];
     title.textContent = text
     linesContainer.appendChild(title);
@@ -215,6 +217,11 @@ const playMovie = (linesContainer, videoContainer, episodeNumber, clipNumber) =>
 
     while (videoContainer.firstChild) {
         videoContainer.firstChild.remove();
+    }
+
+    // nasty hack
+    if (episodeNumber.includes("data")) {
+      episodeNumber = episodeNumber.split("/")[1];
     }
 
     const video = document.createElement('video');
