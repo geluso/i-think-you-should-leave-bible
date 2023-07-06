@@ -1,10 +1,10 @@
 const EPISODES = [
-    "s03e01",
-    "s03e02",
-    "s03e03",
-    "s03e04",
-    "s03e05",
-    "s03e06",
+    "output/s03e01",
+    "output/s03e02",
+    "output/s03e03",
+    "output/s03e04",
+    "output/s03e05",
+    "output/s03e06",
 ]
 
 let ALL_DATA = {};

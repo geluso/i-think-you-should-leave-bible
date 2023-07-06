@@ -20,3 +20,4 @@ you can type in words spoken in the show and see video clips.
 See it live:
 
 https://5tephen.com/i-think-you-should-leave-bible/?q=zip+line
+
