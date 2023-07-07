@@ -1,0 +1,16 @@
+.clip {
+    border: solid black 1px;
+    margin: 1em;
+    padding: 1em;
+}
+
+video {
+    width: 100%;
+    max-width: 800px;
+}
+
+.clickable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
