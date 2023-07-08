@@ -97,6 +97,8 @@ function buildTableOfContents() {
           if (episode.type !== 'directory') return;
 
           // skit name is a name like "01-barley"
+  
+  incrementJSONLoaded();
           const episodeName = episode.name;
   
           const episodeNameListItem = document.createElement('li');
@@ -104,27 +106,27 @@ function buildTableOfContents() {
           episodeNameListItem.classList.add('clickable');
           episodesList.appendChild(episodeNameListItem);
   
-          //const clips = episode.contents;
-          //clips.forEach(clip => {
-          //    const clipNumber = clip.name.split(".")[0];
-          //    const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
-          //    console.log('reverse skit lookup put', clipId);
-          //    REVERSE_SKIT_LOOKUP['data/' + clipId] = episodeName;
-          //});
-  
-          //episodeNameListItem.addEventListener('click', () => {
-          //    clearAll();
-  
-          //    clips.forEach(clip => {
-          //        const clipNumber = clip.name.split(".")[0];
-          //        const clipId = episodeNumber + '-' + clipNumber;
-          //        addClip(clipId)
-          //    });
-          //});
+          episode.contents.forEach(entry => {
+              if (entry.type === 'file') {
+                episodeNameListItem.addEventListener('click', () => {
+                  clearAll();
+
+                  const url = seasonName + '/' + episodeName + '/' + entry.name;
+                  fetch(url).then(res => res.json()).then(json => {
+                    console.log('GOT', url);
+                    console.log(Object.keys(json).length);
+                    const clipNames = Object.keys(json);
+                    for (let clipName of clipNames) {
+                      addClip(seasonName, episodeName, clipName, json);
+                    }
+                  });
+                });
+              } else if (entry.type === 'directory') {
+                console.log(entry.name, entry.contents.length);
+              }
+          });
       })
   })
-  
-  incrementJSONLoaded();
 }
 
 const loadEpisode = (episode) => {
@@ -208,14 +210,11 @@ const populate = episodeClips => {
     }
 }
 
-const addClip = episodeClip => {
-    const [episodeNumber, clipNumber] = episodeClip.split('-');
-
-    const resultsContainer = document.getElementById('results-container');
-
+const addClip = (seasonName, episodeName, clipName, json) => {
     const clipContainer = document.createElement('div');
     clipContainer.classList.add('clip');
 
+    const resultsContainer = document.getElementById('results-container');
     resultsContainer.appendChild(clipContainer);
 
     const videoContainer = document.createElement('div');
@@ -228,40 +227,26 @@ const addClip = episodeClip => {
 
     play.textContent = "play"
     play.addEventListener('click', () => {
-        playMovie(linesContainer, videoContainer, episodeNumber, clipNumber);
+        playMovie(linesContainer, videoContainer, seasonName, episodeName, clipName, json);
     })
 
     const linesContainer = document.createElement('div');
     clipContainer.appendChild(linesContainer);
 
-    addLines(linesContainer, episodeNumber, clipNumber)
+    addLines(linesContainer, seasonName, episodeName, clipName, json)
 }
 
-const addLines = (linesContainer, episodeNumber, clipNumber) => {
+const addLines = (linesContainer, seasonName, episodeName, clipName, json) => {
     while (linesContainer.firstChild) {
         linesContainer.firstChild.remove();
     }
 
-    // nasty hack to canonicalize differences between clip files with .mp4 or .srt extensions.
-    if (!clipNumber.includes(".srt")) {
-        clipNumber = clipNumber.split(".")[0] + ".srt";
-    }
-
+    const text = seasonName + ' ' + episodeName + ' ' + clipName;
     const title = document.createElement('h3');
-
-    const clipId = episodeNumber + '-' + clipNumber.split(".")[0];
-    console.log('reverse skit lookup get', clipId);
-    const text = clipId + ' ' + REVERSE_SKIT_LOOKUP[clipId];
     title.textContent = text
     linesContainer.appendChild(title);
 
-      
-    // another nasty hack
-    if (!episodeNumber.includes("data/")) {
-        episodeNumber = 'data/' + episodeNumber;
-    }
-
-    const lines = ALL_DATA[episodeNumber][clipNumber]
+    const lines = json[clipName];
     lines.forEach(line => {
         const div = document.createElement('div');
         div.textContent = line.text
@@ -269,25 +254,25 @@ const addLines = (linesContainer, episodeNumber, clipNumber) => {
     })
 }
 
-const playMovie = (linesContainer, videoContainer, episodeNumber, clipNumber) => {
-    console.log('play movie:', episodeNumber, clipNumber);
+const videoUrl = (seasonName, episodeName, clipName) => {
+  const clipNumber = clipName.split(".")[0];
+  const filename = seasonName + '/' + episodeName + '/scenes/' + clipNumber + '.mp4';
+  return filename;
+}
+
+const playMovie = (linesContainer, videoContainer, seasonName, episodeName, clipName, json) => {
+    console.log('play movie:', episodeName, clipName);
 
     while (videoContainer.firstChild) {
         videoContainer.firstChild.remove();
     }
 
-    // nasty hack
-    if (episodeNumber.includes("data")) {
-      episodeNumber = episodeNumber.split("/")[1];
-    }
-
     const video = document.createElement('video');
-    clipNumber = clipNumber.split(".")[0]
-    filename = 'media/' + episodeNumber + '/scenes/' + clipNumber + '.mp4';
-    video.src = filename
+    video.src = videoUrl(seasonName, episodeName, clipName);
     video.controls = true;
     video.autoplay = true;
 
+    const clipNumber = clipName.split(".")[0]
     const prevNextControls = document.createElement('p');
     const prev = document.createElement('button');
     prev.textContent = 'prev';
@@ -295,18 +280,22 @@ const playMovie = (linesContainer, videoContainer, episodeNumber, clipNumber) =>
         let prevClipNumber = Math.max(0, parseInt(clipNumber) - 1);
         prevClipNumber = String(prevClipNumber).padStart(4, '0');
         console.log('clip number:', clipNumber, 'prev:', prevClipNumber);
-        addLines(linesContainer, episodeNumber, prevClipNumber + '.srt');
-        playMovie(linesContainer, videoContainer, episodeNumber, prevClipNumber + '.mp4');
+
+        let prevClipName = prevClipNumber + '.srt';
+        addLines(linesContainer, seasonName, episodeName, prevClipName, json);
+        playMovie(linesContainer, videoContainer, seasonName, episodeName, prevClipName, json);
     });
 
     const next = document.createElement('button');
     next.textContent = 'next';
     next.addEventListener('click', () => {
-        let nextClipNumber = Math.min(Object.keys(ALL_DATA['data/' + episodeNumber]).length - 1, parseInt(clipNumber) + 1);
+        let nextClipNumber = Math.min(Object.keys(json).length - 1, parseInt(clipNumber) + 1);
         nextClipNumber = String(nextClipNumber).padStart(4, '0');
         console.log('clip number:', clipNumber, 'next:', nextClipNumber);
-        addLines(linesContainer, episodeNumber, nextClipNumber + '.srt');
-        playMovie(linesContainer, videoContainer, episodeNumber, nextClipNumber + '.mp4');
+
+        let nextClipName = nextClipNumber + '.srt';
+        addLines(linesContainer, seasonName, episodeName, nextClipName, json);
+        playMovie(linesContainer, videoContainer, seasonName, episodeName, nextClipName, json);
     });
 
     videoContainer.appendChild(prevNextControls);
